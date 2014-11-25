@@ -31,6 +31,7 @@
 #define FORBIDDEN_SYMBOL_EXCEPTION_exit		//Needed for IRIX's unistd.h
 
 #include "backends/fs/posix/posix-fs.h"
+#include "backends/fs/zip/zip-fs.h"
 #include "backends/fs/stdiostream.h"
 #include "common/algorithm.h"
 
@@ -169,6 +170,11 @@ bool POSIXFilesystemNode::getChildren(AbstractFSList &myList, ListMode mode, boo
 		if (_path.lastChar() != '/')
 			entry._path += '/';
 		entry._path += entry._displayName;
+
+		if (entry._displayName.hasSuffix(".scummz")) {
+			myList.push_back(new ZipFilesystemNode(entry._path, "", '/'));
+			continue;
+		}
 
 #if defined(SYSTEM_NOT_SUPPORTING_D_TYPE)
 		/* TODO: d_type is not part of POSIX, so it might not be supported
