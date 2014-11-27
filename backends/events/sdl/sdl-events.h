@@ -127,6 +127,7 @@ protected:
 	 */
 	virtual bool remapKey(SDL_Event &ev, Common::Event &event);
 
+#ifndef USE_SDL20
 	/**
 	 * Maps the ASCII value of key
 	 */
@@ -141,6 +142,7 @@ protected:
 	 * Translates SDL key codes to OSystem key codes
 	 */
 	Common::KeyCode SDLToOSystemKeycode(const SDLKey key);
+#endif
 };
 
 #endif

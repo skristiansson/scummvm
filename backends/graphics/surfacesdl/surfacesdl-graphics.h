@@ -44,6 +44,11 @@
 #define USE_OSD	1
 #endif
 
+#ifdef USE_SDL20
+#define SDL_SRCCOLORKEY
+#define SDL_SRCALPHA
+#endif
+
 enum {
 	GFX_NORMAL = 0,
 	GFX_DOUBLESIZE = 1,
@@ -165,6 +170,11 @@ protected:
 
 	/** Hardware screen */
 	SDL_Surface *_hwscreen;
+#ifdef USE_SDL20
+	SDL_Window *_hwwindow;
+	SDL_Renderer *_hwrenderer;
+	SDL_Texture *_hwtexture;
+#endif
 
 	/** Unseen game screen */
 	SDL_Surface *_screen;

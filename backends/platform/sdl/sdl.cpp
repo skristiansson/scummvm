@@ -126,11 +126,13 @@ void OSystem_SDL::init() {
 	// Initialize SDL
 	initSDL();
 
+#ifndef USE_SDL20
 	// Enable unicode support if possible
 	SDL_EnableUNICODE(1);
 
 	// Disable OS cursor
 	SDL_ShowCursor(SDL_DISABLE);
+#endif
 
 	if (!_logger)
 		_logger = new Backends::Log::Log(this);
@@ -158,6 +160,7 @@ void OSystem_SDL::initBackend() {
 	// Check if backend has not been initialized
 	assert(!_inited);
 
+#ifndef USE_SDL20
 	const int maxNameLen = 20;
 	char sdlDriverName[maxNameLen];
 	sdlDriverName[0] = '\0';
@@ -165,6 +168,7 @@ void OSystem_SDL::initBackend() {
 	// Using printf rather than debug() here as debug()/logging
 	// is not active by this point.
 	debug(1, "Using SDL Video Driver \"%s\"", sdlDriverName);
+#endif
 
 	// Create the default event source, in case a custom backend
 	// manager didn't provide one yet.
@@ -314,7 +318,9 @@ void OSystem_SDL::setWindowCaption(const char *caption) {
 		}
 	}
 
+#ifndef USE_SDL20
 	SDL_WM_SetCaption(cap.c_str(), cap.c_str());
+#endif
 }
 
 void OSystem_SDL::quit() {
@@ -477,7 +483,9 @@ void OSystem_SDL::setupIcon() {
 	if (!sdl_surf) {
 		warning("SDL_CreateRGBSurfaceFrom(icon) failed");
 	}
+#ifndef USE_SDL20
 	SDL_WM_SetIcon(sdl_surf, NULL);
+#endif
 	SDL_FreeSurface(sdl_surf);
 	free(icon);
 }
