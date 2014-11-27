@@ -46,7 +46,11 @@
 #include "backends/events/sdl/sdl-events.h"
 #include "backends/mutex/sdl/sdl-mutex.h"
 #include "backends/timer/sdl/sdl-timer.h"
+#ifdef USE_SDL20
+#include "backends/graphics/surfacesdl/surfacesdl20-graphics.h"
+#else
 #include "backends/graphics/surfacesdl/surfacesdl-graphics.h"
+#endif
 #ifdef USE_OPENGL
 #include "backends/graphics/openglsdl/openglsdl-graphics.h"
 #include "graphics/cursorman.h"
@@ -209,7 +213,11 @@ void OSystem_SDL::initBackend() {
 #endif
 
 		if (_graphicsManager == 0) {
+#ifdef USE_SDL20
+			_graphicsManager = new SurfaceSdl20GraphicsManager(_eventSource);
+#else
 			_graphicsManager = new SurfaceSdlGraphicsManager(_eventSource);
+#endif
 		}
 	}
 

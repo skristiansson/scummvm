@@ -44,11 +44,6 @@
 #define USE_OSD	1
 #endif
 
-#ifdef USE_SDL20
-#define SDL_SRCCOLORKEY
-#define SDL_SRCALPHA
-#endif
-
 enum {
 	GFX_NORMAL = 0,
 	GFX_DOUBLESIZE = 1,
@@ -349,6 +344,14 @@ protected:
 	virtual void setMousePos(int x, int y);
 	virtual void toggleFullScreen();
 	virtual bool saveScreenshot(const char *filename);
+
+	// SDL 1.2 / SDL 2.0 incompatibility abstraction methods
+	virtual void setColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors);
+	virtual void setAlpha(SDL_Surface *surface,  Uint32 flag, Uint8 alpha);
+	virtual void setColorKey(SDL_Surface *surface,  int flag, Uint32 key);
+	virtual void createHwScreen();
+	virtual void destroyHwScreen();
+	virtual void blitToHwScreen();
 };
 
 #endif

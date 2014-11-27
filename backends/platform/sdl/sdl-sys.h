@@ -74,5 +74,16 @@ typedef struct { int FAKE; } FAKE_FILE;
 #define strncasecmp    FORBIDDEN_SYMBOL_REPLACEMENT
 #endif
 
+// These flags and functions have been removed in SDL 2.0
+// We define the functions here to avoid build errors, but assert to ensure that they never get called
+#ifdef USE_SDL20
+#define SDL_SRCCOLORKEY 0
+#define SDL_SRCALPHA 0
+#define SDL_FULLSCREEN 0
+#define SDL_UpdateRects(...) assert(0)
+#define SDL_SetColors(...) assert(0)
+#define SDL_SetAlpha(...) assert(0)
+#define SDL_SetVideoMode(...) (assert(0), 0)
+#endif
 
 #endif
