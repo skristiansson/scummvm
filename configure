@@ -3059,7 +3059,6 @@ case $_backend in
 				add_line_to_config_mk "USE_SDL20 = 1"
 				add_line_to_config_h "#define USE_SDL20"
 				;;
-
 			*)
 				;;
 		esac
