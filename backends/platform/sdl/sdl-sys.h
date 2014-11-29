@@ -80,10 +80,11 @@ typedef struct { int FAKE; } FAKE_FILE;
 #define SDL_SRCCOLORKEY 0
 #define SDL_SRCALPHA 0
 #define SDL_FULLSCREEN 0
-#define SDL_UpdateRects(...) assert(0)
-#define SDL_SetColors(...) assert(0)
-#define SDL_SetAlpha(...) assert(0)
-#define SDL_SetVideoMode(...) (assert(0), 0)
+
+#define SDL_UpdateRects(a, b, c) assert(0)
+#define SDL_SetColors(a, b, c, d) assert(0)
+#define SDL_SetAlpha(a, b, c) assert(0)
+#define SDL_SetVideoMode(a, b, c, d) (assert(0), (SDL_Surface *)NULL)
 #endif
 
 #endif
