@@ -55,8 +55,10 @@ void SurfaceSdl20GraphicsManager::createHwScreen() {
 	_hwwindow = SDL_CreateWindow("ScummVM",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		0, 0,
-		SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN);
+		_videoMode.hardwareWidth, _videoMode.hardwareHeight,
+		_videoMode.fullscreen ?
+			(SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN) :
+			SDL_WINDOW_SHOWN);
 	assert(_hwwindow);
 	_hwrenderer = SDL_CreateRenderer(_hwwindow, -1, 0);
 	assert(_hwrenderer);
