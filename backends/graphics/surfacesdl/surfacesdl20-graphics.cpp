@@ -20,7 +20,6 @@
  *
  */
 
-#ifdef USE_SDL20
 #include "backends/graphics/surfacesdl/surfacesdl20-graphics.h"
 
 void SurfaceSdl20GraphicsManager::setColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors) {
@@ -87,5 +86,3 @@ void SurfaceSdl20GraphicsManager::destroyHwScreen() {
 		_hwscreen = NULL;
 	}
 }
-
-#endif
