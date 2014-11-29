@@ -349,6 +349,7 @@ protected:
 	virtual void setColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors);
 	virtual void setAlpha(SDL_Surface *surface,  Uint32 flag, Uint8 alpha);
 	virtual void setColorKey(SDL_Surface *surface,  int flag, Uint32 key);
+	virtual void iconifyWindow();
 	virtual void createHwScreen();
 	virtual void destroyHwScreen();
 	virtual void blitToHwScreen();

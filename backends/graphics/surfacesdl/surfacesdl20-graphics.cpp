@@ -22,6 +22,10 @@
 
 #include "backends/graphics/surfacesdl/surfacesdl20-graphics.h"
 
+void SurfaceSdl20GraphicsManager::warpMouse(int x, int y) {
+	// TODO
+}
+
 void SurfaceSdl20GraphicsManager::setColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors) {
 	if (surface->format->palette)
 		SDL_SetPaletteColors(surface->format->palette, colors, firstcolor, ncolors);
@@ -35,6 +39,10 @@ void SurfaceSdl20GraphicsManager::setAlpha(SDL_Surface *surface,  Uint32 flag, U
 
 void SurfaceSdl20GraphicsManager::setColorKey(SDL_Surface *surface,  int flag, Uint32 key) {
 	SDL_SetColorKey(surface, SDL_TRUE, key);
+}
+
+void SurfaceSdl20GraphicsManager::iconifyWindow() {
+	SDL_MinimizeWindow(_hwwindow);
 }
 
 void SurfaceSdl20GraphicsManager::blitToHwScreen() {

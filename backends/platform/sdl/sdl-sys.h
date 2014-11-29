@@ -80,11 +80,15 @@ typedef struct { int FAKE; } FAKE_FILE;
 #define SDL_SRCCOLORKEY 0
 #define SDL_SRCALPHA 0
 #define SDL_FULLSCREEN 0
+#define SDL_APPMOUSEFOCUS 0
 
 #define SDL_UpdateRects(a, b, c) assert(0)
 #define SDL_SetColors(a, b, c, d) assert(0)
 #define SDL_SetAlpha(a, b, c) assert(0)
 #define SDL_SetVideoMode(a, b, c, d) (assert(0), (SDL_Surface *)NULL)
+#define SDL_GetAppState() (assert(0), 0)
+#define SDL_WarpMouse(a, b) assert(0)
+#define SDL_WM_IconifyWindow() (assert(0), 0)
 #endif
 
 #endif

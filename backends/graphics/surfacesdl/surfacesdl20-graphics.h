@@ -37,6 +37,8 @@ protected:
 	SDL_Renderer *_hwrenderer;
 	SDL_Texture *_hwtexture;
 
+	virtual void warpMouse(int x, int y);
+	virtual void iconifyWindow();
 	virtual void setColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors);
 	virtual void setAlpha(SDL_Surface *surface,  Uint32 flag, Uint8 alpha);
 	virtual void setColorKey(SDL_Surface *surface,  int flag, Uint32 key);

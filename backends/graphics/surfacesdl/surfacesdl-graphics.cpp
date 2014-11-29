@@ -234,10 +234,8 @@ void SurfaceSdlGraphicsManager::setFeatureState(OSystem::Feature f, bool enable)
 		blitCursor();
 		break;
 	case OSystem::kFeatureIconifyWindow:
-#ifndef USE_SDL20
 		if (enable)
-			SDL_WM_IconifyWindow();
-#endif
+			iconifyWindow();
 		break;
 	default:
 		break;
@@ -1711,7 +1709,6 @@ void SurfaceSdlGraphicsManager::setMousePos(int x, int y) {
 }
 
 void SurfaceSdlGraphicsManager::warpMouse(int x, int y) {
-#ifndef USE_SDL20
 	int y1 = y;
 
 	// Don't change actual mouse position, when mouse is outside of our window (in case of windowed mode)
@@ -1738,7 +1735,6 @@ void SurfaceSdlGraphicsManager::warpMouse(int x, int y) {
 
 		setMousePos(x, y);
 	}
-#endif
 }
 
 void SurfaceSdlGraphicsManager::setMouseCursor(const void *buf, uint w, uint h, int hotspot_x, int hotspot_y, uint32 keycolor, bool dontScale, const Graphics::PixelFormat *format) {
@@ -2336,6 +2332,10 @@ void SurfaceSdlGraphicsManager::setAlpha(SDL_Surface *surface,  Uint32 flag, Uin
 
 void SurfaceSdlGraphicsManager::setColorKey(SDL_Surface *surface,  int flag, Uint32 key) {
 	SDL_SetColorKey(surface, flag, key);
+}
+
+void SurfaceSdlGraphicsManager::iconifyWindow() {
+	SDL_WM_IconifyWindow();
 }
 
 void SurfaceSdlGraphicsManager::blitToHwScreen() {
