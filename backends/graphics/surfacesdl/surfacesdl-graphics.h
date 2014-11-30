@@ -146,6 +146,8 @@ public:
 	virtual void transformMouseCoordinates(Common::Point &point);
 	virtual void notifyMousePos(Common::Point mouse);
 
+	virtual void setWindowCaption(const char *title, const char *icon);
+
 protected:
 #ifdef USE_OSD
 	/** Surface containing the OSD message */

@@ -32,6 +32,8 @@ public:
 	SurfaceSdlGraphicsManager(sdlEventSource),
 		_hwwindow(0), _hwrenderer(0), _hwtexture(0) {}
 
+	virtual void setWindowCaption(const char *title, const char *icon);
+
 protected:
 	SDL_Window *_hwwindow;
 	SDL_Renderer *_hwrenderer;

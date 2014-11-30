@@ -326,9 +326,7 @@ void OSystem_SDL::setWindowCaption(const char *caption) {
 		}
 	}
 
-#ifndef USE_SDL20
-	SDL_WM_SetCaption(cap.c_str(), cap.c_str());
-#endif
+	dynamic_cast<SurfaceSdlGraphicsManager *>(_graphicsManager)->setWindowCaption(cap.c_str(), cap.c_str());
 }
 
 void OSystem_SDL::quit() {

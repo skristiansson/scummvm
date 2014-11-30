@@ -2334,6 +2334,10 @@ void SurfaceSdlGraphicsManager::setColorKey(SDL_Surface *surface,  int flag, Uin
 	SDL_SetColorKey(surface, flag, key);
 }
 
+void SurfaceSdlGraphicsManager::setWindowCaption(const char *title, const char *icon) {
+	SDL_WM_SetCaption(title, icon);
+}
+
 void SurfaceSdlGraphicsManager::iconifyWindow() {
 	SDL_WM_IconifyWindow();
 }

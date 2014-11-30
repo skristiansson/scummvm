@@ -89,6 +89,7 @@ typedef struct { int FAKE; } FAKE_FILE;
 #define SDL_GetAppState() (assert(0), 0)
 #define SDL_WarpMouse(a, b) assert(0)
 #define SDL_WM_IconifyWindow() (assert(0), 0)
+#define SDL_WM_SetCaption(a, b) assert(0)
 #endif
 
 #endif

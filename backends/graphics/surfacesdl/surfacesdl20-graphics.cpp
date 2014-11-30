@@ -41,6 +41,10 @@ void SurfaceSdl20GraphicsManager::setColorKey(SDL_Surface *surface,  int flag, U
 	SDL_SetColorKey(surface, SDL_TRUE, key);
 }
 
+void SurfaceSdl20GraphicsManager::setWindowCaption(const char *title, const char *icon) {
+	SDL_SetWindowTitle(_hwwindow, title);
+}
+
 void SurfaceSdl20GraphicsManager::iconifyWindow() {
 	SDL_MinimizeWindow(_hwwindow);
 }
