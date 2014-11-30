@@ -165,11 +165,6 @@ protected:
 
 	/** Hardware screen */
 	SDL_Surface *_hwscreen;
-#ifdef USE_SDL20
-	SDL_Window *_hwwindow;
-	SDL_Renderer *_hwrenderer;
-	SDL_Texture *_hwtexture;
-#endif
 
 	/** Unseen game screen */
 	SDL_Surface *_screen;
