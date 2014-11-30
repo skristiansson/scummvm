@@ -133,10 +133,10 @@ void OSystem_SDL::init() {
 #ifndef USE_SDL20
 	// Enable unicode support if possible
 	SDL_EnableUNICODE(1);
+#endif
 
 	// Disable OS cursor
 	SDL_ShowCursor(SDL_DISABLE);
-#endif
 
 	if (!_logger)
 		_logger = new Backends::Log::Log(this);
