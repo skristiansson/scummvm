@@ -32,7 +32,7 @@ void SurfaceSdl20GraphicsManager::setColors(SDL_Surface *surface, SDL_Color *col
 }
 
 void SurfaceSdl20GraphicsManager::setAlpha(SDL_Surface *surface,  Uint32 flag, Uint8 alpha) {
-	SDL_SetSurfaceAlphaMod(surface, 255);
+	SDL_SetSurfaceAlphaMod(surface, alpha);
 	if (!flag)
 		SDL_SetSurfaceBlendMode(_screen, SDL_BLENDMODE_NONE);
 }

@@ -2327,7 +2327,7 @@ void SurfaceSdlGraphicsManager::setColors(SDL_Surface *surface, SDL_Color *color
 }
 
 void SurfaceSdlGraphicsManager::setAlpha(SDL_Surface *surface,  Uint32 flag, Uint8 alpha) {
-	SDL_SetAlpha(surface, flag, 255);
+	SDL_SetAlpha(surface, flag, alpha);
 }
 
 void SurfaceSdlGraphicsManager::setColorKey(SDL_Surface *surface,  int flag, Uint32 key) {
