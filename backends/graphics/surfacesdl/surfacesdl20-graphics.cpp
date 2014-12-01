@@ -21,9 +21,22 @@
  */
 
 #include "backends/graphics/surfacesdl/surfacesdl20-graphics.h"
+#include "graphics/scaler/aspect.h"
 
 void SurfaceSdl20GraphicsManager::warpMouse(int x, int y) {
-	SDL_WarpMouseInWindow(_hwwindow, x, y);
+	int y1 = y;
+
+	if (_videoMode.aspectRatioCorrection && !_overlayVisible)
+		y1 = real2Aspect(y);
+
+	if (_mouseCurState.x != x || _mouseCurState.y != y) {
+		if (!_overlayVisible)
+			SDL_WarpMouseInWindow(_hwwindow, x * _videoMode.scaleFactor, y1 * _videoMode.scaleFactor);
+		else
+			SDL_WarpMouseInWindow(_hwwindow, x, y1);
+
+		setMousePos(x, y1);
+	}
 }
 
 void SurfaceSdl20GraphicsManager::setColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors) {
