@@ -2166,7 +2166,6 @@ bool SurfaceSdlGraphicsManager::handleScalerHotkeys(Common::KeyCode key) {
 
 	int newMode = -1;
 	int factor = _videoMode.scaleFactor - 1;
-#ifndef USE_SDL20
 	SDLKey sdlKey = (SDLKey)key;
 
 	// Increase/decrease the scale factor
@@ -2191,7 +2190,6 @@ bool SurfaceSdlGraphicsManager::handleScalerHotkeys(Common::KeyCode key) {
 		}
 		newMode = s_gfxModeSwitchTable[_scalerType][factor];
 	}
-#endif
 
 	if (newMode >= 0) {
 		beginGFXTransaction();
