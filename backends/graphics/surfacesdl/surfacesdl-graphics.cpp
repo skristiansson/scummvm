@@ -1201,8 +1201,9 @@ void SurfaceSdlGraphicsManager::internUpdateScreen() {
 #endif
 
 		// Finally, blit all our changes to the screen
-		if (!_displayDisabled)
+		if (!_displayDisabled) {
 			blitToHwScreen();
+		}
 	}
 
 	_numDirtyRects = 0;
