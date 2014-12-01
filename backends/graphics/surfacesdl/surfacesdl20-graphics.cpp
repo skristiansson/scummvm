@@ -23,7 +23,7 @@
 #include "backends/graphics/surfacesdl/surfacesdl20-graphics.h"
 
 void SurfaceSdl20GraphicsManager::warpMouse(int x, int y) {
-	// TODO
+	SDL_WarpMouseInWindow(_hwwindow, x, y);
 }
 
 void SurfaceSdl20GraphicsManager::setColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors) {
