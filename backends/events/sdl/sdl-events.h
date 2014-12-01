@@ -127,11 +127,11 @@ protected:
 	 */
 	virtual bool remapKey(SDL_Event &ev, Common::Event &event);
 
-#ifndef USE_SDL20
 	/**
 	 * Maps the ASCII value of key
 	 */
 	virtual int mapKey(SDLKey key, SDLMod mod, Uint16 unicode);
+	virtual int mapKey(Common::KeyCode key, SDLMod mod, Uint16 unicode);
 
 	/**
 	 * Configures the key modifiers flags status
@@ -142,7 +142,6 @@ protected:
 	 * Translates SDL key codes to OSystem key codes
 	 */
 	Common::KeyCode SDLToOSystemKeycode(const SDLKey key);
-#endif
 };
 
 #endif

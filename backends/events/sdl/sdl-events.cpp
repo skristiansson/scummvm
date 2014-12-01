@@ -74,24 +74,26 @@ SdlEventSource::~SdlEventSource() {
 		SDL_JoystickClose(_joystick);
 }
 
-#ifndef USE_SDL20
 int SdlEventSource::mapKey(SDLKey key, SDLMod mod, Uint16 unicode) {
-	if (key >= SDLK_F1 && key <= SDLK_F9) {
-		return key - SDLK_F1 + Common::ASCII_F1;
-	} else if (key >= SDLK_KP0 && key <= SDLK_KP9) {
-		return key - SDLK_KP0 + '0';
-	} else if (key >= SDLK_UP && key <= SDLK_PAGEDOWN) {
+	return mapKey(SDLToOSystemKeycode(key), mod, unicode);
+}
+
+int SdlEventSource::mapKey(Common::KeyCode key, SDLMod mod, Uint16 unicode) {
+	if (key >= Common::KEYCODE_F1 && key <= Common::KEYCODE_F9) {
+		return key - Common::KEYCODE_F1 + Common::ASCII_F1;
+	} else if (key >= Common::KEYCODE_KP0 && key <= Common::KEYCODE_KP9) {
+		return key - Common::KEYCODE_KP0 + '0';
+	} else if (key >= Common::KEYCODE_UP && key <= Common::KEYCODE_PAGEDOWN) {
 		return key;
 	} else if (unicode) {
 		return unicode;
 	} else if (key >= 'a' && key <= 'z' && (mod & KMOD_SHIFT)) {
 		return key & ~0x20;
-	} else if (key >= SDLK_NUMLOCK && key <= SDLK_EURO) {
+	} else if (key >= Common::KEYCODE_NUMLOCK && key <= Common::KEYCODE_EURO) {
 		return 0;
 	}
 	return key;
 }
-#endif
 
 void SdlEventSource::processMouseEvent(Common::Event &event, int x, int y) {
 	event.mouse.x = x;
@@ -180,7 +182,6 @@ void SdlEventSource::handleKbdMouse() {
 	}
 }
 
-#ifndef USE_SDL20
 void SdlEventSource::SDLModToOSystemKeyFlags(SDLMod mod, Common::Event &event) {
 
 	event.kbd.flags = 0;
@@ -207,9 +208,7 @@ void SdlEventSource::SDLModToOSystemKeyFlags(SDLMod mod, Common::Event &event) {
 	if (mod & KMOD_CAPS)
 		event.kbd.flags |= Common::KBD_CAPS;
 }
-#endif
 
-#ifndef USE_SDL20
 Common::KeyCode SdlEventSource::SDLToOSystemKeycode(const SDLKey key) {
 	switch (key) {
 	case SDLK_BACKSPACE: return Common::KEYCODE_BACKSPACE;
@@ -345,14 +344,15 @@ Common::KeyCode SdlEventSource::SDLToOSystemKeycode(const SDLKey key) {
 	case SDLK_HELP: return Common::KEYCODE_HELP;
 	case SDLK_PRINT: return Common::KEYCODE_PRINT;
 	case SDLK_SYSREQ: return Common::KEYCODE_SYSREQ;
+#ifndef USE_SDL20
 	case SDLK_BREAK: return Common::KEYCODE_BREAK;
+#endif
 	case SDLK_MENU: return Common::KEYCODE_MENU;
 	case SDLK_POWER: return Common::KEYCODE_POWER;
 	case SDLK_UNDO: return Common::KEYCODE_UNDO;
 	default: return Common::KEYCODE_INVALID;
 	}
 }
-#endif
 
 bool SdlEventSource::pollEvent(Common::Event &event) {
 	handleKbdMouse();
@@ -412,6 +412,28 @@ bool SdlEventSource::dispatchSDLEvent(SDL_Event &ev, Common::Event &event) {
 			}
 		}
 		return false;
+#else
+	case SDL_WINDOWEVENT:
+		switch (ev.window.event) {
+		case SDL_WINDOWEVENT_EXPOSED:
+			if (_graphicsManager)
+				_graphicsManager->notifyVideoExpose();
+			return false;
+		case SDL_WINDOWEVENT_RESIZED:
+			if (_graphicsManager) {
+				_graphicsManager->notifyResize(ev.window.data1, ev.window.data2);
+
+				// If the screen changed, send an Common::EVENT_SCREEN_CHANGED
+				int screenID = ((OSystem_SDL *)g_system)->getGraphicsManager()->getScreenChangeID();
+				if (screenID != _lastScreenID) {
+					_lastScreenID = screenID;
+					event.type = Common::EVENT_SCREEN_CHANGED;
+					return true;
+				}
+			}
+			return false;
+		}
+		return false;
 #endif
 
 	case SDL_QUIT:
@@ -426,7 +448,6 @@ bool SdlEventSource::dispatchSDLEvent(SDL_Event &ev, Common::Event &event) {
 
 bool SdlEventSource::handleKeyDown(SDL_Event &ev, Common::Event &event) {
 
-#ifndef USE_SDL20
 	SDLModToOSystemKeyFlags(SDL_GetModState(), event);
 
 	// Handle scroll lock as a key modifier
@@ -481,8 +502,11 @@ bool SdlEventSource::handleKeyDown(SDL_Event &ev, Common::Event &event) {
 
 	event.type = Common::EVENT_KEYDOWN;
 	event.kbd.keycode = SDLToOSystemKeycode(ev.key.keysym.sym);
-	event.kbd.ascii = mapKey(ev.key.keysym.sym, (SDLMod)ev.key.keysym.mod, (Uint16)ev.key.keysym.unicode);
-
+	event.kbd.ascii = mapKey(ev.key.keysym.sym, (SDLMod)ev.key.keysym.mod,
+#ifndef USE_SDL20
+		(Uint16)ev.key.keysym.unicode);
+#else
+		0);
 #endif
 
 	return true;
@@ -492,7 +516,6 @@ bool SdlEventSource::handleKeyUp(SDL_Event &ev, Common::Event &event) {
 	if (remapKey(ev, event))
 		return true;
 
-#ifndef USE_SDL20
 	SDLMod mod = SDL_GetModState();
 
 	// Check if this is an event handled by handleKeyDown(), and stop if it is
@@ -528,7 +551,12 @@ bool SdlEventSource::handleKeyUp(SDL_Event &ev, Common::Event &event) {
 
 	event.type = Common::EVENT_KEYUP;
 	event.kbd.keycode = SDLToOSystemKeycode(ev.key.keysym.sym);
-	event.kbd.ascii = mapKey(ev.key.keysym.sym, (SDLMod)ev.key.keysym.mod, (Uint16)ev.key.keysym.unicode);
+	event.kbd.ascii = mapKey(ev.key.keysym.sym, (SDLMod)ev.key.keysym.mod,
+#ifndef USE_SDL20
+		(Uint16)ev.key.keysym.unicode);
+#else
+		0);
+#endif
 
 	// Ctrl-Alt-<key> will change the GFX mode
 	SDLModToOSystemKeyFlags(mod, event);
@@ -536,7 +564,6 @@ bool SdlEventSource::handleKeyUp(SDL_Event &ev, Common::Event &event) {
 	// Set the scroll lock sticky flag
 	if (_scrollLock)
 		event.kbd.flags |= Common::KBD_SCRL;
-#endif
 
 	return true;
 }
@@ -588,7 +615,6 @@ bool SdlEventSource::handleMouseButtonUp(SDL_Event &ev, Common::Event &event) {
 }
 
 bool SdlEventSource::handleJoyButtonDown(SDL_Event &ev, Common::Event &event) {
-#ifndef USE_SDL20
 	if (ev.jbutton.button == JOY_BUT_LMOUSE) {
 		event.type = Common::EVENT_LBUTTONDOWN;
 		processMouseEvent(event, _km.x, _km.y);
@@ -616,12 +642,10 @@ bool SdlEventSource::handleJoyButtonDown(SDL_Event &ev, Common::Event &event) {
 			break;
 		}
 	}
-#endif
 	return true;
 }
 
 bool SdlEventSource::handleJoyButtonUp(SDL_Event &ev, Common::Event &event) {
-#ifndef USE_SDL20
 	if (ev.jbutton.button == JOY_BUT_LMOUSE) {
 		event.type = Common::EVENT_LBUTTONUP;
 		processMouseEvent(event, _km.x, _km.y);
@@ -649,12 +673,10 @@ bool SdlEventSource::handleJoyButtonUp(SDL_Event &ev, Common::Event &event) {
 			break;
 		}
 	}
-#endif
 	return true;
 }
 
 bool SdlEventSource::handleJoyAxisMotion(SDL_Event &ev, Common::Event &event) {
-#ifndef USE_SDL20
 	int axis = ev.jaxis.value;
 	if ( axis > JOY_DEADZONE) {
 		axis -= JOY_DEADZONE;
@@ -698,7 +720,6 @@ bool SdlEventSource::handleJoyAxisMotion(SDL_Event &ev, Common::Event &event) {
 	}
 
 	processMouseEvent(event, _km.x, _km.y);
-#endif
 
 	return true;
 }
@@ -777,6 +798,11 @@ void SdlEventSource::toggleMouseGrab() {
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	else
 		SDL_WM_GrabInput(SDL_GRAB_OFF);
+#else
+	if (SDL_GetRelativeMouseMode() == SDL_FALSE)
+		SDL_SetRelativeMouseMode(SDL_TRUE);
+	else
+		SDL_SetRelativeMouseMode(SDL_FALSE);
 #endif
 }
 
