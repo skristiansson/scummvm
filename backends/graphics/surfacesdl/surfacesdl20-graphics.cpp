@@ -42,6 +42,7 @@ void SurfaceSdl20GraphicsManager::setColorKey(SDL_Surface *surface,  int flag, U
 }
 
 void SurfaceSdl20GraphicsManager::setWindowCaption(const char *title, const char *icon) {
+	_windowTitle = title;
 	SDL_SetWindowTitle(_hwwindow, title);
 }
 
@@ -64,7 +65,7 @@ void SurfaceSdl20GraphicsManager::blitToHwScreen() {
 }
 
 void SurfaceSdl20GraphicsManager::createHwScreen() {
-	_hwwindow = SDL_CreateWindow("ScummVM",
+	_hwwindow = SDL_CreateWindow(_windowTitle.c_str(),
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		_videoMode.hardwareWidth, _videoMode.hardwareHeight,

@@ -29,8 +29,8 @@ class SurfaceSdl20GraphicsManager : public SurfaceSdlGraphicsManager {
 public:
 	SurfaceSdl20GraphicsManager(SdlEventSource *sdlEventSource)
 	:
-	SurfaceSdlGraphicsManager(sdlEventSource),
-		_hwwindow(0), _hwrenderer(0), _hwtexture(0) {}
+	SurfaceSdlGraphicsManager(sdlEventSource), _windowTitle("ScummVM"),
+	_hwwindow(0), _hwrenderer(0), _hwtexture(0) {}
 
 	virtual void setWindowCaption(const char *title, const char *icon);
 
@@ -38,6 +38,8 @@ protected:
 	SDL_Window *_hwwindow;
 	SDL_Renderer *_hwrenderer;
 	SDL_Texture *_hwtexture;
+
+	Common::String _windowTitle;
 
 	virtual void warpMouse(int x, int y);
 	virtual void iconifyWindow();
