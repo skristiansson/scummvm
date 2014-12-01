@@ -177,6 +177,9 @@ void SdlEventSource::handleKbdMouse() {
 
 #ifndef USE_SDL20
 			SDL_WarpMouse((Uint16)_km.x, (Uint16)_km.y);
+#else
+			if (_graphicsManager)
+				_graphicsManager->warpMouse((Uint16)_km.x, (Uint16)_km.y);
 #endif
 		}
 	}
