@@ -114,6 +114,15 @@ typedef struct { int FAKE; } FAKE_FILE;
 #define SDLMod SDL_Keymod
 #define KMOD_META KMOD_GUI
 
+// SDL's own implementation of the endian agnostic SDL_iconv_utf8_ucs2
+// is not working for some reason, so we roll our own here.
+// TODO: find out what's wrong with SDL's version
+#undef SDL_iconv_utf8_ucs2
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#define SDL_iconv_utf8_ucs2(S) (Uint16 *)SDL_iconv_string("UCS-2BE", "UTF-8", S, SDL_strlen(S)+1);
+#else
+#define SDL_iconv_utf8_ucs2(S) (Uint16 *)SDL_iconv_string("UCS-2LE", "UTF-8", S, SDL_strlen(S)+1);
+#endif
 #endif
 
 #endif

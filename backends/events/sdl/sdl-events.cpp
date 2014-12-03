@@ -503,14 +503,29 @@ bool SdlEventSource::handleKeyDown(SDL_Event &ev, Common::Event &event) {
 	if (remapKey(ev, event))
 		return true;
 
+#ifndef USE_SDL20
+	Uint16 unicode = (Uint16)ev.key.keysym.unicode;
+#else
+	Uint16 unicode = 0;
+	SDL_Event textEv;
+
+	// In SDL2, the unicode field has been removed from the keysym struct.
+	// Instead a SDL_TEXTINPUT event is generated on key kombinations that
+	// generates unicode.
+	// Here we peek into the event queue and pull out the event if it
+	// exists.
+	if (SDL_PeepEvents(&textEv, 1, SDL_GETEVENT, SDL_TEXTINPUT, SDL_TEXTINPUT) > 0) {
+		Uint16 *text = SDL_iconv_utf8_ucs2(textEv.text.text);
+		if (text) {
+			unicode = *text;
+			SDL_free(text);
+		}
+	}
+#endif
+
 	event.type = Common::EVENT_KEYDOWN;
 	event.kbd.keycode = SDLToOSystemKeycode(ev.key.keysym.sym);
-	event.kbd.ascii = mapKey(ev.key.keysym.sym, (SDLMod)ev.key.keysym.mod,
-#ifndef USE_SDL20
-		(Uint16)ev.key.keysym.unicode);
-#else
-		0);
-#endif
+	event.kbd.ascii = mapKey(ev.key.keysym.sym, (SDLMod)ev.key.keysym.mod, unicode);
 
 	return true;
 }
