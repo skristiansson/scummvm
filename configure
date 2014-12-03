@@ -129,6 +129,7 @@ _freetype2=auto
 _taskbar=auto
 _updates=no
 _libunity=auto
+_sdl2=no
 # Default option behavior yes/no
 _debug_build=auto
 _release_build=auto
@@ -353,8 +354,11 @@ define_in_config_if_yes() {
 # TODO: small bit of code to test sdl usability
 find_sdlconfig() {
 	echo_n "Looking for sdl-config... "
-	sdlconfigs="$_sdlconfig:sdl-config:sdl11-config:sdl12-config:sdl2-config"
-	_sdlconfig=
+	sdlconfigs="$_sdlconfig:sdl-config:sdl11-config:sdl12-config"
+	if test "$_sdl2" = yes ; then
+            sdlconfigs="sdl2-config"
+        fi
+        _sdlconfig=
 
 	IFS="${IFS=   }"; ac_save_ifs="$IFS"; IFS="$SEPARATOR"
 	for path_dir in $_sdlpath; do
@@ -965,6 +969,7 @@ Optional Libraries:
 
   --with-sdl-prefix=DIR    Prefix where the sdl-config script is
                            installed (optional)
+  --enable-sdl2            enable SDL2 support (optional)
 
   --with-freetype2-prefix=DIR Prefix where the freetype-config script is
                            installed (optional)
@@ -1048,6 +1053,8 @@ for ac_option in $@; do
 	--disable-libunity)       _libunity=no    ;;
 	--enable-opengl)          _opengl=yes     ;;
 	--disable-opengl)         _opengl=no      ;;
+	--enable-sdl2)            _sdl2=yes       ;;
+	--disable-sdl2)           _sdl2=no        ;;
 	--enable-bink)            _bink=yes       ;;
 	--disable-bink)           _bink=no        ;;
 	--enable-verbose-build)   _verbose_build=yes ;;
