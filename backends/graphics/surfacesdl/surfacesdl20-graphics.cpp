@@ -83,7 +83,7 @@ void SurfaceSdl20GraphicsManager::createHwScreen() {
 		SDL_WINDOWPOS_CENTERED,
 		_videoMode.hardwareWidth, _videoMode.hardwareHeight,
 		_videoMode.fullscreen ?
-			(SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN) :
+			(SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_SHOWN) :
 			SDL_WINDOW_SHOWN);
 	assert(_hwwindow);
 	_hwrenderer = SDL_CreateRenderer(_hwwindow, -1, 0);
