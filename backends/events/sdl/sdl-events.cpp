@@ -510,7 +510,7 @@ bool SdlEventSource::handleKeyDown(SDL_Event &ev, Common::Event &event) {
 	SDL_Event textEv;
 
 	// In SDL2, the unicode field has been removed from the keysym struct.
-	// Instead a SDL_TEXTINPUT event is generated on key kombinations that
+	// Instead a SDL_TEXTINPUT event is generated on key combinations that
 	// generates unicode.
 	// Here we peek into the event queue and pull out the event if it
 	// exists.
