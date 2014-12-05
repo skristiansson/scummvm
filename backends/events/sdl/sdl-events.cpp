@@ -526,15 +526,19 @@ bool SdlEventSource::handleKeyDown(SDL_Event &ev, Common::Event &event) {
 	Uint16 unicode = (Uint16)ev.key.keysym.unicode;
 #else
 	Uint16 unicode = 0;
-	SDL_Event textEv;
+	SDL_Event events[2];
 
 	// In SDL2, the unicode field has been removed from the keysym struct.
 	// Instead a SDL_TEXTINPUT event is generated on key combinations that
 	// generates unicode.
-	// Here we peek into the event queue and pull out the event if it
-	// exists.
-	if (SDL_PeepEvents(&textEv, 1, SDL_GETEVENT, SDL_TEXTINPUT, SDL_TEXTINPUT) > 0) {
-		unicode = convUTF8ToUCS2(textEv.text.text);
+	// Here we peek into the event queue for the event to see if it exists.
+	if (SDL_PeepEvents(events, 2, SDL_PEEKEVENT, SDL_KEYDOWN, SDL_TEXTINPUT) > 0) {
+		// Make sure that the TEXTINPUT event belongs to this KEYDOWN
+		// event and not another pending one.
+		if (events[0].type == SDL_TEXTINPUT)
+			unicode = convUTF8ToUCS2(events[0].text.text);
+		if (events[0].type != SDL_KEYDOWN && events[1].type == SDL_TEXTINPUT)
+			unicode = convUTF8ToUCS2(events[1].text.text);
 	}
 #endif
 
