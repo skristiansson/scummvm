@@ -448,6 +448,25 @@ bool SdlEventSource::dispatchSDLEvent(SDL_Event &ev, Common::Event &event) {
 	return false;
 }
 
+#ifdef USE_SDL20
+static Uint16 convUTF8ToUCS2(const char *src) {
+	Uint16 ucs2 = 0;
+	char *dst = SDL_iconv_string(
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		"UCS-2BE",
+#else
+		"UCS-2LE",
+#endif
+		"UTF-8", src, SDL_strlen(src)+1);
+
+	if (dst) {
+		ucs2 = *((Uint16 *)dst);
+		SDL_free(dst);
+	}
+
+	return ucs2;
+}
+#endif
 
 bool SdlEventSource::handleKeyDown(SDL_Event &ev, Common::Event &event) {
 
@@ -515,11 +534,7 @@ bool SdlEventSource::handleKeyDown(SDL_Event &ev, Common::Event &event) {
 	// Here we peek into the event queue and pull out the event if it
 	// exists.
 	if (SDL_PeepEvents(&textEv, 1, SDL_GETEVENT, SDL_TEXTINPUT, SDL_TEXTINPUT) > 0) {
-		Uint16 *text = SDL_iconv_utf8_ucs2(textEv.text.text);
-		if (text) {
-			unicode = *text;
-			SDL_free(text);
-		}
+		unicode = convUTF8ToUCS2(textEv.text.text);
 	}
 #endif
 
