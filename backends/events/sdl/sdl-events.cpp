@@ -532,14 +532,13 @@ bool SdlEventSource::handleKeyDown(SDL_Event &ev, Common::Event &event) {
 	// Instead a SDL_TEXTINPUT event is generated on key combinations that
 	// generates unicode.
 	// Here we peek into the event queue for the event to see if it exists.
-	if (SDL_PeepEvents(events, 2, SDL_PEEKEVENT, SDL_KEYDOWN, SDL_TEXTINPUT) > 0) {
-		// Make sure that the TEXTINPUT event belongs to this KEYDOWN
-		// event and not another pending one.
-		if (events[0].type == SDL_TEXTINPUT)
-			unicode = convUTF8ToUCS2(events[0].text.text);
-		if (events[0].type != SDL_KEYDOWN && events[1].type == SDL_TEXTINPUT)
-			unicode = convUTF8ToUCS2(events[1].text.text);
-	}
+	int n = SDL_PeepEvents(events, 2, SDL_PEEKEVENT, SDL_KEYDOWN, SDL_TEXTINPUT);
+	// Make sure that the TEXTINPUT event belongs to this KEYDOWN
+	// event and not another pending one.
+	if (n > 0 && events[0].type == SDL_TEXTINPUT)
+		unicode = convUTF8ToUCS2(events[0].text.text);
+	else if (n > 1 && events[0].type != SDL_KEYDOWN && events[1].type == SDL_TEXTINPUT)
+		unicode = convUTF8ToUCS2(events[1].text.text);
 #endif
 
 	event.type = Common::EVENT_KEYDOWN;
