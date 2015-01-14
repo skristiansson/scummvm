@@ -63,7 +63,9 @@ SdlEventSource::SdlEventSource()
 
 		// Enable joystick
 		if (SDL_NumJoysticks() > joystick_num) {
+#ifndef USE_SDL20
 			debug("Using joystick: %s", SDL_JoystickName(joystick_num));
+#endif
 			_joystick = SDL_JoystickOpen(joystick_num);
 		} else {
 			warning("Invalid joystick: %d", joystick_num);
