@@ -25,7 +25,7 @@
 
 #include "backends/fs/wp81/wp81-fs-factory.h"
 #include "backends/fs/wp81/wp81-fs.h"
-#include "backends/fs/zip/zip-fs.h"
+#include "backends/fs/romfs/romfs-fs.h"
 
 namespace Common {
 DECLARE_SINGLETON(WP81FilesystemFactory);
@@ -40,20 +40,20 @@ AbstractFSNode *WP81FilesystemFactory::makeCurrentDirectoryFileNode() const {
 }
 
 AbstractFSNode *WP81FilesystemFactory::makeFileNodePath(const Common::String &path) const {
-	if (path.matchString("*.scummz*")) {
-		Common::String zipFile = normalizePath(path, '/');
-		Common::String pathInZip;
+	if (path.matchString("*.romfs*")) {
+		Common::String romFile = normalizePath(path, '/');
+		Common::String pathInRom;
 
-		// Split 'path' into a path to the zip file and a path within the zip
-		while (!zipFile.hasSuffix(".scummz")) {
-			pathInZip = lastPathComponent(zipFile, '/') + '/' + pathInZip;
-			zipFile = ZipFilesystemNode::getParentPath(zipFile, '/');
+		// Split 'path' into a path to the rom file and a path within the rom
+		while (!romFile.hasSuffix(".romfs")) {
+			pathInRom = lastPathComponent(romFile, '/') + '/' + pathInRom;
+			romFile = RomfsFilesystemNode::getParentPath(romFile, '/');
 		}
 
-		if (pathInZip.lastChar() == '/')
-			pathInZip.deleteLastChar();
+		if (pathInRom.lastChar() == '/')
+			pathInRom.deleteLastChar();
 
-		return new ZipFilesystemNode(zipFile, pathInZip, '\\');
+		return new RomfsFilesystemNode(romFile, pathInRom, '/');
 	}
 
 	return new WP81FilesystemNode(path);

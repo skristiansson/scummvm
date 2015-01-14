@@ -23,7 +23,7 @@
 #include <Windows.h>
 #include <ppltasks.h>
 #include "backends/fs/wp81/wp81-fs.h"
-#include "backends/fs/zip/zip-fs.h"
+#include "backends/fs/romfs/romfs-fs.h"
 #include "backends/fs/stdiostream.h"
 
 using namespace concurrency;
@@ -189,8 +189,8 @@ bool WP81FilesystemNode::getChildren(AbstractFSList &myList, ListMode mode, bool
 				node._isReadonly = (item->Attributes & FileAttributes::ReadOnly) == FileAttributes::ReadOnly;
 				node._isPseudoRoot = false;
 
-				if (node._displayName.hasSuffix(".scummz")) {
-					myList.push_back(new ZipFilesystemNode(node._path, "", '\\'));
+				if (node._displayName.hasSuffix(".romfs")) {
+					myList.push_back(new RomfsFilesystemNode(node._path, "", '\\'));
 					continue;
 				}
 
