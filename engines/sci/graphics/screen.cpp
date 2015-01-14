@@ -81,7 +81,8 @@ GfxScreen::GfxScreen(ResourceManager *resMan) : _resMan(resMan) {
 		case GID_LSL1:
 		case GID_LSL5:
 		case GID_SQ1:
-			_width = 190;
+			_scriptHeight = 190;
+			break;
 		default:
 			break;
 		}
@@ -237,6 +238,8 @@ GfxScreen::GfxScreen(ResourceManager *resMan) : _resMan(resMan) {
 	case GFX_SCREEN_UPSCALED_640x480:
 		_vectorPutPixelPtr = &GfxScreen::putPixelDisplayUpscaled;
 		_putPixelPtr = &GfxScreen::putPixelDisplayUpscaled;
+		break;
+	case GFX_SCREEN_UPSCALED_DISABLED:
 		break;
 	}
 }

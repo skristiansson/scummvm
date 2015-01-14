@@ -2770,6 +2770,9 @@ if test -n "$_host"; then
 			_port_mk="backends/platform/openpandora/op-bundle.mk"
 			;;
 		ppc-amigaos)
+			# PPC Linker requires this to fix relocation errors
+			CXXFLAGS="$CXXFLAGS -mlongcall"
+
 			# Only static builds link successfully on buildbot
 			LDFLAGS=`echo $LDFLAGS | sed 's/-use-dynld//'`
 			LDFLAGS="$LDFLAGS -static"
@@ -4512,6 +4515,7 @@ $_def_64bit_type_unsigned
 #else
 $_def_64bit_type_unsigned
 #endif
+#define HAVE_INT64
 EOF
 fi
 
@@ -4539,6 +4543,8 @@ STAGINGPATH=$_stagingpath
 WIN32PATH=$_win32path
 AMIGAOSPATH=$_amigaospath
 STATICLIBPATH=$_staticlibpath
+
+ABI := $ABI
 
 BACKEND := $_backend
 MODULES += $MODULES
