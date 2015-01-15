@@ -31,6 +31,7 @@
 
 #include "backends/fs/posix/posix-fs-factory.h"
 #include "backends/fs/posix/posix-fs.h"
+#include "backends/fs/romfs/romfs-fs.h"
 
 AbstractFSNode *POSIXFilesystemFactory::makeRootFileNode() const {
 	return new POSIXFilesystemNode("/");
@@ -43,6 +44,22 @@ AbstractFSNode *POSIXFilesystemFactory::makeCurrentDirectoryFileNode() const {
 
 AbstractFSNode *POSIXFilesystemFactory::makeFileNodePath(const Common::String &path) const {
 	assert(!path.empty());
+	if (path.matchString("*.romfs*")) {
+		Common::String romFile = normalizePath(path, '/');
+		Common::String pathInRom;
+
+		// Split 'path' into a path to the rom file and a path within the rom
+		while (!romFile.hasSuffix(".romfs")) {
+			pathInRom = lastPathComponent(romFile, '/') + '/' + pathInRom;
+			romFile = RomfsFilesystemNode::getParentPath(romFile, '/');
+		}
+
+		if (pathInRom.lastChar() == '/')
+			pathInRom.deleteLastChar();
+
+		return new RomfsFilesystemNode(romFile, pathInRom, '/');
+	}
+
 	return new POSIXFilesystemNode(path);
 }
 #endif
