@@ -20,8 +20,6 @@
  *
  */
 
-#define FORBIDDEN_SYMBOL_EXCEPTION_printf
-
 #include "common/system.h"
 #include "common/list.h"
 #include "backends/fs/fs-factory.h"

@@ -20,7 +20,6 @@
  *
  */
 
-#define FORBIDDEN_SYMBOL_EXCEPTION_printf
 #include "backends/fs/romfs/romfsstream.h"
 
 RomfsStream::RomfsStream(StdioStream *stream, uint32 dataOffset, uint32 dataSize) :
