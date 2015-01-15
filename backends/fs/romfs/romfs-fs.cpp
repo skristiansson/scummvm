@@ -132,8 +132,10 @@ void RomfsFilesystemNode::validatePathInRom() {
 	_next = 0;
 	_offset = getFirstFileHeaderOffset(_stream);
 
-	if (_pathInRom.empty() || !_offset)
+	if (_pathInRom.empty() || !_offset) {
+		_dirOffset = _offset;
 		return;
+	}
 
 	splitPath(pathComponents, _pathInRom);
 	Common::String curr = pathComponents.front();
